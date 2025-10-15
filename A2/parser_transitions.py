@@ -32,7 +32,7 @@ class PartialParse(object):
         ### Note: The root token should be represented with the string "ROOT"
         ### Note: If you need to use the sentence object to initialize anything, make sure to not directly 
         ###       reference the sentence object.  That is, remember to NOT modify the sentence object. 
-        self.stack : list[str] = ["<ROOT>"]
+        self.stack : list[str] = ["ROOT"]
         self.buffer : list[str] = sentence.copy()
         self.dependencies : list[tuple[str, str]] = []
         ### END YOUR CODE
@@ -114,13 +114,13 @@ def minibatch_parse(sentences, model, batch_size):
 
 
     def _is_finished(pp: PartialParse) -> bool:
-        return True if (len(pp.stack) == 1) and (len(pp.buffer) == 0) else False
+        return True if (len(pp.stack) == 1 and len(pp.buffer) == 0) else False
 
     partial_parses = [PartialParse(sentence) for sentence in sentences]
     unfinished_parses = partial_parses[:]
     while len(unfinished_parses) > 0:
         minibatch = unfinished_parses[:batch_size]
-        transitions = model.predict(partial_parses)
+        transitions = model.predict(minibatch)
         for pp, transition in zip(minibatch, transitions):
             pp.parse_step(transition)
             if _is_finished(pp):
