@@ -54,11 +54,11 @@ class PartialParse(object):
         ###         3. Right Arc
         assert transition == "S" or "LA" or "RA"
 
-        if transition == "S"
+        if transition == "S":
             self.stack.append(self.buffer.pop(0))
-        elif transition == "LA"
+        elif transition == "LA":
             self.dependencies.append((self.stack[-1], self.stack.pop(-2)))
-        elif transition == "RA"
+        elif transition == "RA":
             self.dependencies.append((self.stack[-2], self.stack.pop(-1)))
         else:
             raise ValueError(""" Transition must be "S", "LA", "RA" """)
