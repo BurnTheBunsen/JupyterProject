@@ -125,7 +125,7 @@ def minibatch_parse(sentences, model, batch_size):
             pp.parse_step(transition)
             if _is_finished(pp):
                 unfinished_parses.remove(pp)
-    dependencies = [pp.dependencies]
+    dependencies = [pp.dependencies for pp in partial_parses]
 
     ### END YOUR CODE
     return dependencies
