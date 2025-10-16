@@ -73,8 +73,8 @@ class ParserModel(nn.Module):
         ### 
         ### See the PDF for hints.
 
-        included_features = n_features * self.embed_size
-        self.embed_to_hidden_weight = nn.Parameter(torch.ones(included_features, hidden_size))
+        in_features = n_features * self.embed_size
+        self.embed_to_hidden_weight = nn.Parameter(torch.ones(in_features, hidden_size))
         self.embed_to_hidden_bias = nn.Parameter(torch.ones(hidden_size))
         nn.init.xavier_uniform_(self.embed_to_hidden_weight)
         nn.init.uniform_(self.embed_to_hidden_bias)
@@ -117,6 +117,7 @@ class ParserModel(nn.Module):
         ###     Gather: https://pytorch.org/docs/stable/torch.html#torch.gather
         ###     View: https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
         ###     Flatten: https://pytorch.org/docs/stable/generated/torch.flatten.html
+
 
 
 
