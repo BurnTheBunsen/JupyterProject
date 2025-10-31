@@ -32,9 +32,9 @@ class PartialParse(object):
         ### Note: The root token should be represented with the string "ROOT"
         ### Note: If you need to use the sentence object to initialize anything, make sure to not directly 
         ###       reference the sentence object.  That is, remember to NOT modify the sentence object. 
-        self.stack : list[str] = ["ROOT"]
-        self.buffer : list[str] = sentence.copy()
-        self.dependencies : list[tuple[str, str]] = []
+        self.stack = ["ROOT"]
+        self.buffer = sentence.copy()
+        self.dependencies = []
         ### END YOUR CODE
 
 
@@ -52,7 +52,6 @@ class PartialParse(object):
         ###         1. Shift
         ###         2. Left Arc
         ###         3. Right Arc
-        assert transition == "S" or "LA" or "RA"
 
         if transition == "S":
             self.stack.append(self.buffer.pop(0))
@@ -61,8 +60,7 @@ class PartialParse(object):
         elif transition == "RA":
             self.dependencies.append((self.stack[-2], self.stack.pop(-1)))
         else:
-            raise ValueError(""" Transition must be "S", "LA", "RA" """)
-
+            raise ValueError("""Accepted transitions: "S", "LA", "RA" """)
         ### END YOUR CODE
 
     def parse(self, transitions):
@@ -77,6 +75,7 @@ class PartialParse(object):
         for transition in transitions:
             self.parse_step(transition)
         return self.dependencies
+
 
 def minibatch_parse(sentences, model, batch_size):
     """Parses a list of sentences in minibatches using a model.
@@ -113,22 +112,10 @@ def minibatch_parse(sentences, model, batch_size):
     ###             is being accessed by `partial_parses` and may cause your code to crash.
 
 
-    def _is_finished(pp: PartialParse) -> bool:
-        return True if (len(pp.stack) == 1 and len(pp.buffer) == 0) else False
-
-    partial_parses = [PartialParse(sentence) for sentence in sentences]
-    unfinished_parses = partial_parses[:]
-    while len(unfinished_parses) > 0:
-        minibatch = unfinished_parses[:batch_size]
-        transitions = model.predict(minibatch)
-        for pp, transition in zip(minibatch, transitions):
-            pp.parse_step(transition)
-            if _is_finished(pp):
-                unfinished_parses.remove(pp)
-    dependencies = [pp.dependencies for pp in partial_parses]
-
     ### END YOUR CODE
+
     return dependencies
+
 
 def test_step(name, transition, stack, buf, deps,
               ex_stack, ex_buf, ex_deps):
